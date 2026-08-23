@@ -19,7 +19,8 @@ const discordClient = new Client({
 discordClient.once('ready', () => {
     console.log(`[Discord] ${discordClient.user.tag} đã online`);
 });
-discordClient.login(config.discordToken);
+discordClient.login(process.env.DISCORD_TOKEN);
+//discordClient.login(config.discordToken);
 
 const fs = require('fs')
 const https = require('https')
