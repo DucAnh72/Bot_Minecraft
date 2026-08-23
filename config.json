@@ -1,0 +1,14 @@
+{  
+    "username": "botsh1",
+    "host": "kingsmp.vn",
+    "port": 25565,
+    "version": "1.21.1",
+    "respawn": false,
+    "registered": true,
+    "orderslot":0,
+    "orderamount": 6000,
+    "botPassword": "12345",
+    "discordToken": "MTU0MDE4OTEzOTI0NzQzNTk4OA.GMr7EJ.b0rWwQ07eK2cr4GLvFXJaOlBUM3l1MbAHYAXdw",
+    "discordOwnerId": "1431160618936832040",
+    "webhookUrl": "https://discord.com/api/webhooks/1538412494685741098/zQk0CatJCNZM5wD04rGpXdB0cAhET--uuOqG3Q1-KPsQ0uBfrUV_JuIlmfh75cZUihxJ"
+}
