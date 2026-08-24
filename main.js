@@ -6,7 +6,7 @@ const {
 } = require('discord.js');
 
 const mineflayer = require("mineflayer")
-const readline = require("readline")
+
 const config = require('./config.json')
 
 const discordClient = new Client({
@@ -151,7 +151,10 @@ function start_bot() {
             bot.respawn()
         }, delay);
     })
-
+    bot.on('error', (err) => {
+        console.error('Lỗi bot:', err);
+        sendDiscordWebhook(`❌ **[LỖI BOT]** Bot gặp lỗi: \`${err.message}\` (Thời gian đã treo: \`${getUptimeString()}\`)`);
+    })
     // --- ĐÃ SỬA LỖI AN TOÀN TẠI ĐÂY ---
     bot.on('kicked', (reason) => {
 
@@ -225,11 +228,6 @@ function start_bot() {
             setTimeout(() => {
                 menu();
             }, 4000);
-        }
-        if (message.includes('Không thể kết nối bạn tới')){
-            setTimeout(() => {
-                restartBot();
-            }, 10000);
         }
         const msgLower = message.toLowerCase();
         if (msgLower.includes('banned') || msgLower.includes('bị khóa tài khoản') || msgLower.includes('ban lệnh')) {
@@ -317,7 +315,7 @@ function shard() {
 function status() {
     console.log(`${process.env.username}`)
     const uptime = getUptimeString();
-    const statusMsg = `📈 **[BÁO CÁO THỦ CÔNG]**\n bot::${process.env.username} \n👤 Bot: **${config.username}**\n⏱️ Thời gian đã treo: \`${uptime}\`\n❤️ Máu hiện tại: \`${Math.round(bot.health || 20)}\`\n🍖 Thức ăn: \`${Math.round(bot.food || 20)}\``;
+    const statusMsg = `📈 **[BÁO CÁO THỦ CÔNG]**\nbot::${process.env.username} \n👤 Bot: **${config.username}**\n⏱️ Thời gian đã treo: \`${uptime}\`\n❤️ Máu hiện tại: \`${Math.round(bot.health || 20)}\`\n🍖 Thức ăn: \`${Math.round(bot.food || 20)}\``;
     console.log('[+] ' + statusMsg.replace(/\*\*/g, ''));
     sendDiscordWebhook(statusMsg);
 }
@@ -436,7 +434,7 @@ discordClient.on('messageCreate', async (message) => {
 
     const cmd = message.content.toLowerCase();
     if (cmd === 'help') {
-        await message.reply('Các lệnh có sẵn:\n!shard - Gửi lệnh /afk\n!status - Báo cáo trạng thái bot\n!menu - Vào menu\n!wafk - Bật AFK Quay đầu\n!stop - Tắt AFK Quay đầu\n!cmd <lệnh> - Gửi lệnh chat trong game\n!exit - Thoát bot\n!restart - Restart bot\n!order - Bật Auto Order\n!sorder - Tắt Auto Order');
+        await message.reply('Các lệnh có sẵn:\n- test: Thử lệnh /ah sell\n- shard: Thực hiện lệnh /afk và click shard\n- status: Báo cáo trạng thái bot\n- menu: Mở menu\n- wafk: Bật AFK quay đầu\n- stop: Tắt AFK quay đầu\n- cmd <lệnh>: Thực hiện lệnh trong game\n- exit: Thoát bot\n- restart: Restart bot\n- order: Bật Auto Order\n- sorder: Tắt Auto Order');
     }
     if (cmd === 'test') {
         const text = '/ah sell';
@@ -463,7 +461,7 @@ discordClient.on('messageCreate', async (message) => {
     }  
 
     if (cmd.startsWith('cmd ')) {
-        const text = message.content.slice(5);
+        const text = message.content.slice(4);
         executeCommand(message, text);
     }
 
