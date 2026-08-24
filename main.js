@@ -28,9 +28,9 @@ const https = require('https')
 let currentSign = null;
 
 let bot_args = {
-    host: config.host,
-    port: config.port,
-    username: config.username,
+    host: process.env.host,
+    port: process.env.port,
+    username: process.env.username,
     version: config.version,
     respawn: config.respawn
 }
@@ -103,7 +103,7 @@ function start_bot() {
     }
     });
         loginMessageCount = 0;
-
+    console.log(` ${process.env.username}`)
     bot.on('login', () => {
         console.log('Logged in')
         setTimeout(() => {
@@ -310,6 +310,7 @@ function shard() {
     }, 1000);
 }
 function status() {
+    console.log(`${process.env.username})
     const uptime = getUptimeString();
     const statusMsg = `📈 **[BÁO CÁO THỦ CÔNG]**\n👤 Bot: **${config.username}**\n⏱️ Thời gian đã treo: \`${uptime}\`\n❤️ Máu hiện tại: \`${Math.round(bot.health || 20)}\`\n🍖 Thức ăn: \`${Math.round(bot.food || 20)}\``;
     console.log('[+] ' + statusMsg.replace(/\*\*/g, ''));
