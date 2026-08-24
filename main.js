@@ -327,7 +327,7 @@ function menu() {
     console.log('[+] Đang Vào KingSMP');
     }, 1000);
 }
-function startOrder() {
+function startOrder(slotnumber) {
 
     clearInterval(orderInterval);
 
@@ -342,7 +342,7 @@ function startOrder() {
         }, 500);
 
         setTimeout(() => {
-            bot.clickWindow(config.orderslot, 0, 0);
+            bot.clickWindow(slotnumber, 0, 0);
         }, 1000);
 
         setTimeout(() => {
@@ -424,6 +424,23 @@ async function executeCommand(message, command) {
     }, 3000);
 
 }
+
+async function showitem(message, slot) {
+    bot.chat('/order');
+
+    setTimeout(() => {
+        bot.clickWindow(51, 0, 0);
+    }, 500);
+    setTimeout(async () => {
+        const item = bot.currentWindow?.slots[slot];
+
+        const log = `📦 Item in slot ${slot}: ${
+        item ? item.displayName : 'Empty'}`;
+
+        await message.reply(log);
+        
+    }, 1000);
+}
 // Lắng nghe tin nhắn từ Discord
 discordClient.on('messageCreate', async (message) => {
 
@@ -475,8 +492,13 @@ discordClient.on('messageCreate', async (message) => {
         await message.reply('Đang restart');
     }
 
-    if (cmd === 'order') {
-        startOrder();  
+    if (cmd.startsWith('show ')) {
+        const slot = Number(message.content.slice(5));
+        showitem(slot);
+    }
+    if (cmd.startsWith('order ')) {
+        const slot2 = Number(message.content.slice(6));
+        startOrder(slot2);
         await message.reply('Đã bật Auto Order');  
     }
     if (cmd === 'sorder') {
