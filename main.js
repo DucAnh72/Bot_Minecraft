@@ -312,7 +312,7 @@ function shard() {
 function status() {
     console.log(`${process.env.username})
     const uptime = getUptimeString();
-    const statusMsg = `📈 **[BÁO CÁO THỦ CÔNG]**\n👤 Bot: **${config.username}**\n⏱️ Thời gian đã treo: \`${uptime}\`\n❤️ Máu hiện tại: \`${Math.round(bot.health || 20)}\`\n🍖 Thức ăn: \`${Math.round(bot.food || 20)}\``;
+    const statusMsg = `📈 **[BÁO CÁO THỦ CÔNG]**\n bot::${process.env.username} \n👤 Bot: **${config.username}**\n⏱️ Thời gian đã treo: \`${uptime}\`\n❤️ Máu hiện tại: \`${Math.round(bot.health || 20)}\`\n🍖 Thức ăn: \`${Math.round(bot.food || 20)}\``;
     console.log('[+] ' + statusMsg.replace(/\*\*/g, ''));
     sendDiscordWebhook(statusMsg);
 }
