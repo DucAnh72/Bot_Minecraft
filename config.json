@@ -1,12 +1,12 @@
 {  
-    "username": "botsh1",
+    "username": "bot351",
     "host": "sgp.kingmc.vn",
     "port": 25565,
     "version": "1.21.1",
     "respawn": false,
     "registered": true,
     "orderslot":0,
-    "orderamount": 6000,
+    "orderamount": 12000,
     "botPassword": "12345",
   
     "discordOwnerId": "1431160618936832040",
