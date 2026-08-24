@@ -226,6 +226,11 @@ function start_bot() {
                 menu();
             }, 4000);
         }
+        if (message.includes('Không thể kết nối bạn tới')){
+            setTimeout(() => {
+                restartBot();
+            }, 2000);
+        }
         const msgLower = message.toLowerCase();
         if (msgLower.includes('banned') || msgLower.includes('bị khóa tài khoản') || msgLower.includes('ban lệnh')) {
             const uptime = getUptimeString();
