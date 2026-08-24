@@ -229,7 +229,7 @@ function start_bot() {
         if (message.includes('Không thể kết nối bạn tới')){
             setTimeout(() => {
                 restartBot();
-            }, 2000);
+            }, 10000);
         }
         const msgLower = message.toLowerCase();
         if (msgLower.includes('banned') || msgLower.includes('bị khóa tài khoản') || msgLower.includes('ban lệnh')) {
