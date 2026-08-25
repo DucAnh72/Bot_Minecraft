@@ -16,7 +16,7 @@ const discordClient = new Client({
         GatewayIntentBits.MessageContent
     ]
 });
-discordClient.once('ready', () => {
+discordClient.once('clientReady', () => {
     console.log(`[Discord] ${discordClient.user.tag} đã online`);
 });
 discordClient.login(process.env.DISCORD_TOKEN);
@@ -95,22 +95,31 @@ function sendDiscordWebhook(content) {
 
 let bot;
 function start_bot() {
+    if (bot) {
+        console.log('[!] Bot đang có một kết nối hiện tại, bỏ qua lần khởi động trùng.');
+        return;
+    }
+
     //console.log('[+] Đang start bot...')
-    bot = mineflayer.createBot(bot_args);
-    bot._client.on('packet', (data, meta) => {
+    const botInstance = mineflayer.createBot(bot_args);
+    bot = botInstance;
+    botInstance._client.on('packet', (data, meta) => {
     if (meta.name === 'open_sign_entity') {
         currentSign = data;
     }
     });
         loginMessageCount = 0;
     console.log(` ${process.env.username}`)
-    bot.on('login', () => {
+    botInstance.once('login', () => {
         console.log('Logged in')
-        setTimeout(() => {
-            bot.chat(`/dn ${config.botPassword}`)
+        const loginTimer = setTimeout(() => {
+            // Do not send a delayed command from an old connection to a new one.
+            if (bot !== botInstance) return;
+            botInstance.chat(`/dn ${config.botPassword}`)
             console.log('[+] Đã Gửi Lệnh Đăng Nhập')
         }, 1000);
 
+        botInstance.once('end', () => clearTimeout(loginTimer));
     })
 
     bot.on('spawn', () => {
@@ -195,7 +204,7 @@ function start_bot() {
         sendDiscordWebhook(msg);
 
     });
-    bot.on('messagestr', (message, messagePosition) => {
+    botInstance.on('messagestr', (message, messagePosition) => {
         const CHANNEL_ID = "123456789";
 
         const channel =
@@ -213,7 +222,7 @@ function start_bot() {
             if (loginMessageCount >= 2) {
                 console.log('[+] Đủ điều kiện mở menu');
                 setTimeout(() => {
-                    menu();
+                    menu(botInstance);
                 }, 2000);
             }
         }     
@@ -226,7 +235,7 @@ function start_bot() {
         }
         if (message.includes('Vui lòng chờ 1 giây rồi')) {
             setTimeout(() => {
-                menu();
+                menu(botInstance);
             }, 4000);
         }
         const msgLower = message.toLowerCase();
@@ -236,9 +245,11 @@ function start_bot() {
         }
     })
     
-    bot.on('end', () => {
+    botInstance.on('end', () => {
         stopAllTasks()
         clearInterval(reportInterval); 
+        if (bot !== botInstance) return;
+        bot = null;
         if (reconnecting) return
         reconnecting = true
         if (wasKicked) {
@@ -265,6 +276,8 @@ function stopAllTasks() {
     clearInterval(orderInterval);
     orderInterval = null;
 
+    clearTimeout(menuTimeout);
+    menuTimeout = null;
 }
 function exitBot() {
     reconnecting = true
@@ -275,7 +288,9 @@ function exitBot() {
     const uptime = getUptimeString();
     sendDiscordWebhook(`🔴 **${config.username}** đã chủ động thoát game. (Tổng thời gian đã treo: \`${uptime}\`)`);
     startTime = null;
-    bot.quit()
+    const currentBot = bot;
+    bot = null;
+    currentBot?.quit()
 } 
 function stopafk() {
     if (wAfkInterval) {
@@ -320,11 +335,16 @@ function status() {
     sendDiscordWebhook(statusMsg);
 }
 
-function menu() {
-    bot.chat('/menu');
-    setTimeout(() => {
-    bot.clickWindow(24, 0, 0);
-    console.log('[+] Đang Vào KingSMP');
+function menu(targetBot = bot) {
+    if (!targetBot || bot !== targetBot) return;
+
+    clearTimeout(menuTimeout);
+    targetBot.chat('/menu');
+    menuTimeout = setTimeout(() => {
+        if (bot !== targetBot) return;
+        targetBot.clickWindow(24, 0, 0);
+        console.log('[+] Đang Vào KingSMP');
+        menuTimeout = null;
     }, 1000);
 }
 function startOrder(slotnumber) {
@@ -388,7 +408,9 @@ function stopOrder() {
 function restartBot() {
     reconnecting = true;
     stopAllTasks();
-    bot.quit();
+    const currentBot = bot;
+    bot = null;
+    currentBot?.quit();
 
     setTimeout(() => {
 
@@ -465,7 +487,7 @@ discordClient.on('messageCreate', async (message) => {
         status();
     }
     if (cmd === 'menu') {
-        menu();
+            menu(botInstance);
         await message.reply('Đã thực hiện menu');
     }
     if (cmd === 'wafk') {
@@ -494,7 +516,7 @@ discordClient.on('messageCreate', async (message) => {
 
     if (cmd.startsWith('show ')) {
         const slot = Number(message.content.slice(5));
-        showitem(slot);
+        showitem(message, slot);
     }
     if (cmd.startsWith('order ')) {
         const slot2 = Number(message.content.slice(6));
