@@ -505,7 +505,15 @@ discordClient.on("messageCreate", async (message) => {
         restartBot();
         await message.reply("Đang restart");
     }
-
+    if (cmd.startsWith("clickW ") {
+        const slotC = Number(message.content.slice(7));
+        if (bot.currentWindow) {
+            await bot.clickWindow(slotC, 0, 0);
+            await message.reply("Đã click vào WindowSlot ${slotC}: $");
+        } else {
+            await message.reply("Không có cửa sổ nào đang mở");
+        }
+    }
     if (cmd.startsWith("show ")) {
         const slot = Number(message.content.slice(5));
         showitem(message, slot);
