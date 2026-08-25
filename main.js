@@ -487,7 +487,7 @@ discordClient.on('messageCreate', async (message) => {
         status();
     }
     if (cmd === 'menu') {
-            menu(botInstance);
+            menu(bot);
         await message.reply('Đã thực hiện menu');
     }
     if (cmd === 'wafk') {
