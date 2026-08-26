@@ -505,8 +505,8 @@ discordClient.on("messageCreate", async (message) => {
         restartBot();
         await message.reply("Đang restart");
     }
-    if (cmd.startsWith("clickW ")) {
-        const slotC = Number(message.content.slice(7));
+    if (cmd.startsWith("click ")) {
+        const slotC = Number(message.content.slice(6));
         if (bot.currentWindow) {
             await bot.clickWindow(slotC, 0, 0);
             await message.reply("Đã click vào WindowSlot ${slotC}: $");
