@@ -69,7 +69,7 @@ function sendDiscordWebhook(content) {
 
     const cleanUrl = process.env.webhook.trim();
     const data = JSON.stringify({
-        username: process.env || "Mineflayer Bot",
+        username: process.env.username || "Mineflayer Bot",
         content: content,
     });
 
