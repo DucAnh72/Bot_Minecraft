@@ -133,6 +133,24 @@ function start_bot() {
 
     bot.on("spawn", () => {
         console.log("Đăng Nhập Thành Công");
+        bot.settings = {
+        viewDistance: "far"
+        };
+        try {
+            bot._client.write("settings", {
+            locale: "en_US",
+            viewDistance: 32,
+            chatFlags: 0,
+            chatColors: true,
+            skinParts: 127,
+            mainHand: 1
+            });
+             
+            console.log("[+] Requested viewDistance = 32");
+            }
+        catch (err) {
+            console.log("View distance error:", err.message);
+            }
 
         if (!startTime) startTime = Date.now();
 
@@ -515,11 +533,12 @@ discordClient.on("messageCreate", async (message) => {
         }
     }
     if (cmd === "chunks") {
+        console.log("WORLD KEYS:", Object.keys(bot.world || {}));
+    
         await message.reply(
-            `Chunks loaded: ${bot.world.columns.size}`
+            `RAM: ${Math.round(process.memoryUsage().rss / 1024 / 1024)} MB`
         );
     }
-    
     if (cmd.startsWith("show ")) {
         const slot = Number(message.content.slice(5));
         showitem(message, slot);
