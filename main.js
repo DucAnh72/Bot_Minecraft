@@ -133,9 +133,13 @@ function start_bot() {
 
     bot.on("spawn", () => {
         console.log("Đăng Nhập Thành Công");
-        bot.settings = {
-        viewDistance: "far"
-        };
+       // bot.settings = {
+      //  viewDistance: "far"
+      //  };
+        console.log("Mineflayer version:", bot.version);
+        setTimeout(() => {
+            console.log("World keys:", Object.keys(bot.world || {}));
+        }, 3000);
         try {
             bot._client.write("settings", {
             locale: "en_US",
