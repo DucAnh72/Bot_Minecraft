@@ -140,15 +140,6 @@ function start_bot() {
             `🟢 **${process.env.username}** đã kết nối và đăng nhập thành công vào server!`,
         );
 
-        setInterval(() => {
-            console.log(
-                "Chunks:",
-                bot.world.columns.size,
-                "RAM:",
-                Math.round(process.memoryUsage().rss / 1024 / 1024),
-                "MB"
-            );
-        }, 10000);
         // Báo cáo tự động mỗi 5 phút (300000 ms)
         clearInterval(reportInterval);
         reportInterval = setInterval(() => {
@@ -523,6 +514,12 @@ discordClient.on("messageCreate", async (message) => {
             await message.reply("Không có cửa sổ nào đang mở");
         }
     }
+    if (cmd === "chunks") {
+        await message.reply(
+            `Chunks loaded: ${bot.world.columns.size}`
+        );
+    }
+    
     if (cmd.startsWith("show ")) {
         const slot = Number(message.content.slice(5));
         showitem(message, slot);
