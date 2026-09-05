@@ -133,13 +133,7 @@ function start_bot() {
 
     bot.on("spawn", () => {
         console.log("Đăng Nhập Thành Công");
-       // bot.settings = {
-      //  viewDistance: "far"
-      //  };
-        console.log("Mineflayer version:", bot.version);
-        setTimeout(() => {
-            console.log("World keys:", Object.keys(bot.world || {}));
-        }, 3000);
+
         try {
             bot._client.write("settings", {
             locale: "en_US",
@@ -150,7 +144,7 @@ function start_bot() {
             mainHand: 1
             });
              
-            console.log("[+] Requested viewDistance = 32");
+            console.log("[+] Requested viewDistance = 16");
             }
         catch (err) {
             console.log("View distance error:", err.message);
