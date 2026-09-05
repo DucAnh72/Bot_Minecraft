@@ -139,7 +139,7 @@ function start_bot() {
         try {
             bot._client.write("settings", {
             locale: "en_US",
-            viewDistance: 32,
+            viewDistance: 16,
             chatFlags: 0,
             chatColors: true,
             skinParts: 127,
